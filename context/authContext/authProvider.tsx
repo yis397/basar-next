@@ -4,6 +4,7 @@ import { IUser,IRegistro, IMsg, ILogin } from '../../interfaces';
 import { apiBasar } from '../../services/http/apiBasar';
 import { authReducer } from './authReducer';
 import { useRouter } from 'next/router';
+import { AnyAaaaRecord } from 'dns';
 
 
 interface AuthProps {
@@ -66,8 +67,12 @@ export const AuthProvider=({children}:Prop) =>{
         dispatch({type:'Login',payload:{...resp.data.user}})
         return  resp.data.msg
       } catch (error) {
-        
-          return  error.response.data.msg??'Error en sitema'
+        let errorMessage = "Failed to do something exceptional";
+        if (error instanceof Error) {
+          errorMessage = error.message;
+          return  (errorMessage as any).response.data.msg??'Error en sitema'
+        }
+       return 'error'
       }
     }
     const login=async(data:any)=>{
@@ -80,7 +85,12 @@ export const AuthProvider=({children}:Prop) =>{
             return  resp.data.msg
           } catch (error) {
             
-              return  error.response.data.msg??'Error en sitema'
+            let errorMessage = "Failed to do something exceptional";
+            if (error instanceof Error) {
+              errorMessage = error.message;
+              return  (errorMessage as any).response.data.msg??'Error en sitema'
+            }
+           return 'error'
           }
     }
     const logout=()=>{
@@ -100,7 +110,12 @@ export const AuthProvider=({children}:Prop) =>{
             }
             return resp.data.msg
         } catch (error) {
-            return  error.response.data.msg??'Error en sitema'
+            let errorMessage = "Failed to do something exceptional";
+            if (error instanceof Error) {
+              errorMessage = error.message;
+              return  (errorMessage as any).response.data.msg??'Error en sitema'
+            }
+           return 'error'
         }
       
     }
